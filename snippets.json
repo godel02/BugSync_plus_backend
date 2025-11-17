@@ -1,0 +1,472 @@
+[
+  {
+    "id": "js-click",
+    "keywords": ["click","button","onclick","event.preventDefault"],
+    "title": "JS click handler",
+    "snippet": "element.addEventListener('click', (e) => { e.preventDefault(); /* handle click */ });",
+    "description": "Ensure handler is attached after DOM load; check event.preventDefault usage."
+  },
+  {
+    "id": "cors",
+    "keywords": ["cors","cross-origin","cross origin","access-control"],
+    "title": "CORS header fix",
+    "snippet": "res.setHeader('Access-Control-Allow-Origin', '*'); // for debugging only",
+    "description": "If CORS errors occur, ensure server sends proper CORS headers."
+  },
+  {
+    "id": "zindex",
+    "keywords": ["z-index","overlay","pointer-events","covering"],
+    "title": "CSS overlay / z-index issue",
+    "snippet": ".overlay { z-index: 9999; pointer-events: auto; }",
+    "description": "Transparent overlays can block clicks — inspect with devtools."
+  },
+  {
+    "id": "fetch-500-debug",
+    "title": "Debug 500 Server Errors in Fetch",
+    "snippet": "fetch('/api')\n  .then(res => {\n    if(!res.ok) throw new Error('Server Error ' + res.status);\n    return res.json();\n  })\n  .catch(console.error);",
+    "description": "Helps identify API 500 errors caused by backend crashes.",
+    "keywords": ["fetch", "500", "server error", "api not working", "backend crash"]
+  },
+  {
+    "id": "cors-preflight",
+    "title": "Fix CORS Preflight Failure",
+    "snippet": "app.options('*', cors());\napp.use(cors());",
+    "description": "Enables handling of CORS OPTIONS preflight requests.",
+    "keywords": ["cors", "options", "preflight", "blocked", "api"]
+  },
+  {
+    "id": "js-prevent-default",
+    "title": "Fix Form Auto-Reload Issue",
+    "snippet": "form.addEventListener('submit', (e) => {\n  e.preventDefault();\n});",
+    "description": "Prevents form submission from reloading the page.",
+    "keywords": ["form", "submit", "reload", "preventDefault", "js"]
+  },
+  {
+    "id": "node-json-error",
+    "title": "Fix Unexpected JSON Token Error",
+    "snippet": "app.use(express.json({ strict: false }));",
+    "description": "Useful when backend receives malformed JSON bodies.",
+    "keywords": ["json", "parse error", "unexpected token", "body parsing", "express"]
+  },
+  {
+    "id": "react-key-warning",
+    "title": "Fix React Key Missing in List",
+    "snippet": "{items.map(item => <Item key={item.id} {...item} />)}",
+    "description": "Fixes list render bugs & incorrect diffing.",
+    "keywords": ["react", "key", "list", "warning", "map"]
+  },
+  {
+    "id": "api-auth-header",
+    "title": "Add Authorization Header Properly",
+    "snippet": "fetch('/secure', { headers: { 'Authorization': 'Bearer ' + token } })",
+    "description": "Fixes 401 errors due to missing headers.",
+    "keywords": ["auth", "header", "bearer", "401", "token"]
+  },
+  {
+    "id": "axios-post-json",
+    "title": "Correct Axios POST JSON Format",
+    "snippet": "axios.post('/api', { name: 'Virat' }, { headers: { 'Content-Type': 'application/json' } })",
+    "description": "Fixes API not receiving JSON payload issues.",
+    "keywords": ["axios", "post", "json", "payload", "content-type"]
+  },
+  {
+    "id": "mongo-index-error",
+    "title": "Fix Mongo Duplicate Key Error",
+    "snippet": "Model.ensureIndexes();",
+    "description": "Useful for debugging E11000 duplicate key errors.",
+    "keywords": ["mongo", "e11000", "duplicate", "index", "database"]
+  },
+  {
+    "id": "express-404",
+    "title": "Catch 404 Routes in Express",
+    "snippet": "app.use((req,res)=>res.status(404).json({error:'Not Found'}));",
+    "description": "Fixes silent route failures.",
+    "keywords": ["404", "express", "not found", "route", "api"]
+  },
+  {
+    "id": "console-table",
+    "title": "Use console.table for Debugging Arrays",
+    "snippet": "console.table(users);",
+    "description": "Improves readability of debugging logs.",
+    "keywords": ["console", "table", "debug", "array", "log"]
+  },
+  {
+    "id": "check-null-prop",
+    "title": "Fix Cannot Read Property of Undefined",
+    "snippet": "if (!obj || !obj.prop) return;",
+    "description": "Prevents common runtime crashes.",
+    "keywords": ["undefined", "cannot read", "crash", "null", "bug"]
+  },
+  {
+    "id": "css-responsive-img",
+    "title": "Fix Image Overflow on Mobile",
+    "snippet": "img { max-width: 100%; height: auto; }",
+    "description": "Ensures images scale responsively.",
+    "keywords": ["responsive", "image", "css", "mobile", "overflow"]
+  },
+  {
+    "id": "react-conditional-render",
+    "title": "Fix React Render Before Data Load",
+    "snippet": "{data && <Component data={data} />}",
+    "description": "Prevents 'cannot read property X of null'.",
+    "keywords": ["react", "conditional", "render", "null", "loading"]
+  },
+  {
+    "id": "node-helmet",
+    "title": "Add Security Headers Using Helmet",
+    "snippet": "const helmet = require('helmet');\napp.use(helmet());",
+    "description": "Fixes common security warnings.",
+    "keywords": ["security", "helmet", "headers", "express", "best practice"]
+  },
+  {
+    "id": "cache-bust-css",
+    "title": "Fix CSS Not Updating",
+    "snippet": "<link rel='stylesheet' href='style.css?v=1.0'>",
+    "description": "Browser cache often prevents CSS updates.",
+    "keywords": ["css", "cache", "not updating", "refresh", "ui"]
+  },
+  {
+    "id": "esmodule-import",
+    "title": "Correct ES Module Import",
+    "snippet": "import express from 'express';",
+    "description": "Fixes 'cannot use import outside module'.",
+    "keywords": ["esm", "import", "module", "syntaxerror"]
+  },
+  {
+    "id": "node-dirname-fix",
+    "title": "Fix __dirname in ES Modules",
+    "snippet": "import { dirname } from 'path';\nimport { fileURLToPath } from 'url';\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = dirname(__filename);",
+    "description": "Useful since __dirname isn't available in ES modules.",
+    "keywords": ["dirname", "esm", "path", "module", "node"]
+  },
+  {
+    "id": "css-sticky-header",
+    "title": "Sticky Header CSS",
+    "snippet": "header{ position: sticky; top:0; z-index:100; }",
+    "description": "Fixes header not staying visible while scrolling.",
+    "keywords": ["sticky", "header", "css", "scroll", "ui"]
+  },
+  {
+    "id": "js-deep-clone",
+    "title": "Deep Clone Object (No Mutation)",
+    "snippet": "const clone = JSON.parse(JSON.stringify(obj));",
+    "description": "Fixes unintended state mutation issues.",
+    "keywords": ["clone", "deep copy", "mutation", "bug"]
+  },
+  {
+    "id": "axios-error-debug",
+    "title": "Debug Axios Errors Properly",
+    "snippet": "axios.get('/api').catch(err => console.log(err.response?.data || err));",
+    "description": "Shows real error messages instead of generic error.",
+    "keywords": ["axios", "error", "debug", "network"]
+  },
+  {
+    "id": "react-router-not-found",
+    "title": "Fix React Router 404 Refresh",
+    "snippet": "app.get('*', (req,res) => res.sendFile(path.join(__dirname,'/index.html')));",
+    "description": "SPA refresh crashes without this route.",
+    "keywords": ["react router", "404", "refresh", "spa"]
+  },
+  {
+    "id": "jwt-expired-check",
+    "title": "Detect Expired JWT Token",
+    "snippet": "if (decoded.exp * 1000 < Date.now()) return 'Token expired';",
+    "description": "Fixes silent JWT failures.",
+    "keywords": ["jwt", "expired", "auth", "token"]
+  },
+  {
+    "id": "mongo-find-id",
+    "title": "Correct MongoDB Find by ID",
+    "snippet": "Model.findById(id)",
+    "description": "Fixes invalid cast errors.",
+    "keywords": ["mongo", "id", "findbyid", "casterror"]
+  },
+  {
+    "id": "api-pagination",
+    "title": "Simple Pagination Logic",
+    "snippet": "const page = +req.query.page || 1;\nconst limit = 10;\nconst skip = (page - 1) * limit;",
+    "description": "Clean pagination formula for APIs.",
+    "keywords": ["pagination", "page", "limit", "skip", "api"]
+  },
+  {
+    "id": "css-text-overflow",
+    "title": "Prevent Text Overflow",
+    "snippet": ".text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }",
+    "description": "Fixes text spilling out of containers.",
+    "keywords": ["text", "overflow", "ellipsis", "css"]
+  },
+  {
+    "id": "pm2-start",
+    "title": "Run Node App with PM2",
+    "snippet": "pm2 start server.js --watch",
+    "description": "Useful for production restarts on crashes.",
+    "keywords": ["pm2", "production", "restart", "node", "crash"]
+  },
+  {
+    "id": "git-reset-hard",
+    "title": "Undo All Local Changes",
+    "snippet": "git reset --hard HEAD",
+    "description": "Fixes messy working directory.",
+    "keywords": ["git", "reset", "undo", "changes"]
+  },
+  {
+    "id": "git-clean",
+    "title": "Remove Untracked Files",
+    "snippet": "git clean -fd",
+    "description": "Fixes 'project behaving weird' due to stray files.",
+    "keywords": ["git", "clean", "untracked", "remove"]
+  },
+  {
+    "id": "firebase-timestamp",
+    "title": "Correct Firebase Timestamp",
+    "snippet": "firebase.firestore.Timestamp.now()",
+    "description": "Prevents timezone bugs.",
+    "keywords": ["firebase", "timestamp", "date"]
+  },
+  {
+    "id": "js-throttle",
+    "title": "Throttle Function",
+    "snippet": "const throttle=(fn,delay)=>{let last=0;return(...a)=>{if(Date.now()-last>delay){last=Date.now();fn(...a)}}}",
+    "description": "Fixes event flooding (scroll, resize).",
+    "keywords": ["throttle", "scroll", "resize", "performance"]
+  },
+  {
+    "id": "css-grid-center",
+    "title": "Center Using CSS Grid",
+    "snippet": ".center { display:grid; place-items:center; }",
+    "description": "Alternative to flexbox.",
+    "keywords": ["css", "grid", "center", "ui"]
+  },
+  {
+    "id": "db-retry",
+    "title": "Retry DB Connection Logic",
+    "snippet": "setInterval(()=>mongoose.connect(uri),3000);",
+    "description": "Fixes DB not connecting on first try.",
+    "keywords": ["mongo", "retry", "connect", "database"]
+  },
+  {
+    "id": "nginx-proxy",
+    "title": "Fix Nginx Reverse Proxy for Node",
+    "snippet": "proxy_pass http://localhost:3000;",
+    "description": "Fixes 502/504 errors.",
+    "keywords": ["nginx", "proxy", "502", "504", "node"]
+  },
+  {
+    "id": "css-shadow",
+    "title": "Subtle Shadow Fix",
+    "snippet": "box-shadow:0 2px 8px rgba(0,0,0,0.1);",
+    "description": "Fixes flat UI look.",
+    "keywords": ["css", "shadow", "ui"]
+  },
+  {
+    "id": "firebase-auth",
+    "title": "Firebase Auth Debug",
+    "snippet": "firebase.auth().onAuthStateChanged(u=>console.log(u));",
+    "description": "Fixes unknown login/logout state.",
+    "keywords": ["firebase", "auth", "state", "debug"]
+  },
+  {
+    "id": "js-optional-chaining",
+    "title": "Safe Optional Chaining",
+    "snippet": "const val = obj?.a?.b?.c;",
+    "description": "Prevents 'cannot read property of null'.",
+    "keywords": ["optional chaining", "undefined", "error"]
+  },
+  {
+    "id": "dotenv-path",
+    "title": "Load .env from Custom Path",
+    "snippet": "require('dotenv').config({ path:'./config/.env' })",
+    "description": "Fixes env not loading.",
+    "keywords": ["dotenv", "env not loading", "config"]
+  },
+  {
+    "id": "mysql-connection",
+    "title": "Fix MySQL Timeout",
+    "snippet": "pool.getConnection((err,conn)=>{ if(err) console.error(err); })",
+    "description": "Fixes MySQL drop connections.",
+    "keywords": ["mysql", "timeout", "connection", "pool"]
+  },
+  {
+    "id": "postman-env",
+    "title": "Use Postman Environment Variables",
+    "snippet": "{{base_url}}/api/users",
+    "description": "Fixes wrong URLs in API tests.",
+    "keywords": ["postman", "environment", "api test"]
+  },
+  {
+    "id": "js-array-remove",
+    "title": "Remove Element from Array",
+    "snippet": "arr = arr.filter(x => x.id !== id);",
+    "description": "Fixes mutation issues.",
+    "keywords": ["array", "remove", "delete", "js"]
+  },
+  {
+    "id": "css-invisible-click",
+    "title": "Fix Invisible Element Blocking Clicks",
+    "snippet": ".overlay { pointer-events:none; }",
+    "description": "Fixes unclickable UI due to invisible overlays.",
+    "keywords": ["unclickable", "overlay", "pointer events"]
+  },
+  {
+    "id": "react-memo",
+    "title": "Optimize Component Using React.memo",
+    "snippet": "export default React.memo(MyComponent);",
+    "description": "Fixes slow re-renders.",
+    "keywords": ["react", "memo", "performance", "rerender"]
+  },
+  {
+    "id": "app-crash-debug",
+    "title": "Find What Causes App Crash",
+    "snippet": "process.on('uncaughtException', console.error);\nprocess.on('unhandledRejection', console.error);",
+    "description": "Catches silent Node crashes.",
+    "keywords": ["crash", "node", "exception", "debug"]
+  },
+  {
+    "id": "heroku-port",
+    "title": "Fix Heroku PORT Error",
+    "snippet": "const PORT = process.env.PORT || 3000;",
+    "description": "Fixes app crashing on Heroku.",
+    "keywords": ["heroku", "port", "deploy", "crash"]
+  },
+  {
+    "id": "js-click-handler",
+    "title": "Fix JS Click Handler Not Firing",
+    "snippet": "document.querySelector('#btn').addEventListener('click', function(e){\n  e.preventDefault();\n  console.log('Clicked');\n});",
+    "description": "Make sure the DOM is loaded and the element exists before attaching event listener.",
+    "keywords": ["click", "button", "onclick", "fire", "listener", "event", "not working"]
+  },
+  {
+    "id": "dom-load-wrapper",
+    "title": "Ensure Code Runs After DOM Loaded",
+    "snippet": "document.addEventListener('DOMContentLoaded', () => {\n  // your code here\n});",
+    "description": "Useful for fixing issues where elements are null because script runs too early.",
+    "keywords": ["dom", "loaded", "null", "undefined", "element not found", "queryselector"]
+  },
+  {
+    "id": "css-zindex",
+    "title": "Fix Element Hidden Behind Layers (z-index)",
+    "snippet": ".element { position: relative; z-index: 9999; }",
+    "description": "Common fix when buttons or UI elements are unclickable due to overlays.",
+    "keywords": ["css", "z-index", "not clickable", "overlay", "hidden", "front"]
+  },
+  {
+    "id": "react-useeffect-fetch",
+    "title": "Proper Fetch in React useEffect",
+    "snippet": "useEffect(() => {\n  fetch('/api/data')\n    .then(res => res.json())\n    .then(setData);\n}, []);",
+    "description": "Fixes repeated API calls or missing dependency warnings.",
+    "keywords": ["react", "useeffect", "fetch", "rerender", "api", "dependency"]
+  },
+  {
+    "id": "react-state-update",
+    "title": "Fix React State Not Updating Immediately",
+    "snippet": "setCount(prev => prev + 1);",
+    "description": "Use functional updates when new state depends on previous state.",
+    "keywords": ["react", "state", "not updating", "rerender", "setstate"]
+  },
+  {
+    "id": "node-port-block",
+    "title": "Fix Node Server Port Already in Use",
+    "snippet": "npx kill-port 3000",
+    "description": "Useful when your local dev server can't start because a port is stuck.",
+    "keywords": ["node", "port", "error eaddrinuse", "port busy", "server not starting"]
+  },
+  {
+    "id": "node-cors",
+    "title": "Enable CORS in Express",
+    "snippet": "const cors = require('cors');\napp.use(cors());",
+    "description": "Fixes browser 'CORS policy' errors when calling APIs.",
+    "keywords": ["cors", "api", "blocked", "origin", "fetch", "express"]
+  },
+  {
+    "id": "fetch-json",
+    "title": "Proper Fetch JSON Handling",
+    "snippet": "fetch('/api')\n  .then(res => res.json())\n  .then(data => console.log(data));",
+    "description": "Prevents common JSON parsing errors.",
+    "keywords": ["fetch", "json", "unexpected token", "parse", "api"]
+  },
+  {
+    "id": "async-await-catch",
+    "title": "Safe async/await Error Handling",
+    "snippet": "try {\n  const res = await apiCall();\n} catch(err) {\n  console.error(err);\n}",
+    "description": "Use this structure to avoid silent promise failures.",
+    "keywords": ["async", "await", "promise", "error", "catch"]
+  },
+  {
+    "id": "axios-timeout",
+    "title": "Add Timeout to Axios Requests",
+    "snippet": "axios.get('/api', { timeout: 5000 })",
+    "description": "Fixes hanging API calls.",
+    "keywords": ["axios", "timeout", "hang", "api request", "slow"]
+  },
+  {
+    "id": "mongo-connection",
+    "title": "Correct MongoDB Connection String",
+    "snippet": "mongoose.connect(process.env.MONGO_URI, {\n  useNewUrlParser: true,\n  useUnifiedTopology: true,\n});",
+    "description": "Fixes common Mongo connection issues.",
+    "keywords": ["mongo", "mongodb", "mongoose", "connection", "timeout"]
+  },
+  {
+    "id": "jwt-verify",
+    "title": "Fix JWT Not Valid / Unauthorized",
+    "snippet": "jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {\n  if (err) return res.status(401).json({ error: 'Invalid token' });\n});",
+    "description": "Handles expired or malformed JWT tokens gracefully.",
+    "keywords": ["jwt", "auth", "token", "unauthorized", "invalid"]
+  },
+  {
+    "id": "validator-email",
+    "title": "Email Validation with Regex",
+    "snippet": "const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;",
+    "description": "Useful for forms where invalid emails are passing through.",
+    "keywords": ["email", "validation", "regex", "form", "invalid input"]
+  },
+  {
+    "id": "debounce-input",
+    "title": "Debounce Function for Input Search",
+    "snippet": "function debounce(fn, delay){\n let t; return (...args)=>{\n  clearTimeout(t);\n  t=setTimeout(()=>fn(...args),delay);\n }}",
+    "description": "Fixes slow UI during search typing.",
+    "keywords": ["input", "slow", "lag", "debounce", "search"]
+  },
+  {
+    "id": "scroll-to-bottom",
+    "title": "Auto Scroll to Bottom of Chat/Log",
+    "snippet": "window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });",
+    "description": "Fixes chat UI not scrolling.",
+    "keywords": ["scroll", "bottom", "chat", "ui", "auto scroll"]
+  },
+  {
+    "id": "css-center",
+    "title": "Center Element Using Flexbox",
+    "snippet": ".center {\n  display:flex;\n  justify-content:center;\n  align-items:center;\n}",
+    "description": "Fixes common centering layout issues.",
+    "keywords": ["center", "css", "flexbox", "alignment", "ui"]
+  },
+  {
+    "id": "env-load",
+    "title": "Ensure dotenv Loads Environment Variables",
+    "snippet": "require('dotenv').config();",
+    "description": "Fixes missing environment variable issues.",
+    "keywords": ["dotenv", "env", "config", "not loading", "undefined"]
+  },
+  {
+    "id": "null-check",
+    "title": "Safer Null Checks",
+    "snippet": "if (!value) return; // prevents crashes",
+    "description": "Avoids undefined/null runtime errors.",
+    "keywords": ["null", "undefined", "crash", "error", "runtime"]
+  },
+  {
+    "id": "api-log-request",
+    "title": "Log Requests in Node.js",
+    "snippet": "app.use((req,res,next)=>{ console.log(req.method, req.url); next(); });",
+    "description": "Useful for debugging API calls.",
+    "keywords": ["api", "logging", "debug", "request", "route"]
+  },
+  {
+    "id": "css-overflow",
+    "title": "Fix Scroll Overflow Issues",
+    "snippet": ".container { overflow-y: auto; max-height: 90vh; }",
+    "description": "Fixes layout overflow problems.",
+    "keywords": ["overflow", "scroll", "css", "layout"]
+  }
+]
+
