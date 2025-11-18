@@ -1,0 +1,44 @@
+{
+  "name": "BugSync+",
+  "version": "1.0.0",
+  "author": "You",
+  "description": "Create GitHub issues from Cliq and get code snippet suggestions.",
+  "icons": {
+    "16": "assets/icon-16.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "platform": {
+    "cliq": {
+      "commands": [
+        {
+          "name": "bug",
+          "description": "Create a GitHub issue and get suggestions. Usage: /bug title | body | #labels",
+          "url": "https://unacting-bearishly-deloras.ngrok-free.dev/cliq/commands/bug",
+          "method": "POST",
+          "type": "slash"
+        },
+        {
+          "name": "bugstatus",
+          "description": "Check status of an issue. Usage: /bugstatus <issueNumber>",
+          "url": "https://unacting-bearishly-deloras.ngrok-free.dev/bugstatus",
+          "method": "POST",
+          "type": "slash"
+        }
+      ],
+      "panels": [
+        {
+          "name": "bugsync-dashboard",
+          "title": "BugSync+ Dashboard",
+          "url": "https://your-backend-url.com/cliq/widget/dashboard",
+          "type": "panel"
+        }
+      ],
+      "permissions": [
+        "sendMessage",
+        "attachments",
+        "openUrl"
+      ]
+    }
+  }
+}
