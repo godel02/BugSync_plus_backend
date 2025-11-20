@@ -73,4 +73,59 @@ router.get('/auth/github/callback', async (req, res) => {
   }
 });
 
+
+// ✅ ADD THIS: List user's GitHub repos
+router.get('/github/repos', async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    if (!userId) return res.status(400).json({ error: 'Missing userId query param' });
+
+    db.get(`SELECT access_token FROM user_tokens WHERE user_id = ?`, [userId], async (err, row) => {
+      if (err) {
+        console.error('DB error fetching token', err);
+        return res.status(500).json({ error: 'server error' });
+      }
+      if (!row || !row.access_token) {
+        return res.status(401).json({ error: 'Not connected' });
+      }
+
+      try {
+        const ghResp = await fetch('https://api.github.com/user/repos?per_page=100', {
+          headers: {
+            'Authorization': `token ${row.access_token}`,
+            'User-Agent': 'bugsync-plus',
+            'Accept': 'application/vnd.github+json'
+          }
+        });
+
+        const repos = await ghResp.json();
+        if (!ghResp.ok) {
+          console.error('GitHub list repos error', repos);
+          return res.status(ghResp.status).json({ error: repos });
+        }
+
+        const minimal = (repos || []).map(r => ({
+          id: r.id,
+          name: r.name,
+          full_name: r.full_name,
+          private: r.private,
+          owner: r.owner.login
+        }));
+
+        return res.json(minimal);
+
+      } catch (ghErr) {
+        console.error('GitHub API call failed', ghErr);
+        return res.status(500).json({ error: 'github api error' });
+      }
+    });
+
+  } catch (err) {
+    console.error('repos route error', err);
+    return res.status(500).json({ error: 'server error' });
+  }
+});
+
+
+// END — export router
 module.exports = router;
