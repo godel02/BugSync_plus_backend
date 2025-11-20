@@ -8,6 +8,7 @@ app.use(express.json());
 
 const githubAuthRouter = require('./githubAuth');
 app.use('/', githubAuthRouter);
+console.log('Mounted githubAuth router');
 
 app.use('/cliq/commands', cliBugRouter);
 
