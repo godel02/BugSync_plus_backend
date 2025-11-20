@@ -126,6 +126,23 @@ router.get('/github/repos', async (req, res) => {
   }
 });
 
+// DEV DEBUG: show stored token for a user (dev only - remove for production)
+router.get('/debug/token', (req, res) => {
+  const userId = req.query.userId;
+  if (!userId) return res.status(400).json({ error: 'missing userId' });
+
+  db.get(`SELECT * FROM user_tokens WHERE user_id = ?`, [userId], (err, row) => {
+    if (err) {
+      console.error('debug token db error', err);
+      return res.status(500).json({ error: 'db error' });
+    }
+    if (!row) return res.json({ found: false });
+    // only return non-sensitive info in real apps — this is dev-only
+    return res.json({ found: true, userId: row.user_id, scope: row.scope });
+  });
+});
+
 
 // END — export router
 module.exports = router;
+
