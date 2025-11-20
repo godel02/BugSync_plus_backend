@@ -6,6 +6,9 @@ const cliBugRouter = require('./cli-extension/bugCommand'); // adjust path
 const app = express();
 app.use(express.json());
 
+const githubAuthRouter = require('./githubAuth');
+app.use('/', githubAuthRouter);
+
 app.use('/cliq/commands', cliBugRouter);
 
 // Health check endpoint
