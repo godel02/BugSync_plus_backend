@@ -1,154 +1,176 @@
+// server.js
 require('dotenv').config();
-const express = require('express');
 
-const cliBugRouter = require('./cli-extension/bugCommand'); // adjust path
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+
+// node-fetch (ESM import in CommonJS)
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: f }) => f(...args));
 
 const app = express();
 app.use(express.json());
 
-const githubAuthRouter = require('./githubAuth');
-app.use('/', githubAuthRouter);
-console.log('Mounted githubAuth router');
+// ===== ROUTERS =====
+const cliBugRouter = require('./cli-extension/bugCommand');
+const githubAuthRouter = require('./auth/githubAuth'); // FIXED PATH
 
+// Mount OAuth routes
+app.use('/', githubAuthRouter);
+console.log('Mounted GitHub OAuth Router');
+
+// Mount CLI routes
 app.use('/cliq/commands', cliBugRouter);
 
-// Health check endpoint
+// ===== HEALTH CHECK =====
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     message: 'BugSync+ backend is running',
-    time: new Date().toISOString()
+    time: new Date().toISOString(),
   });
 });
 
-// after your /health route, add:
-
-const fs = require('fs');
-const path = require('path');
-
+// ===== SNIPPETS LOADING =====
 const SNIPPET_FILE = path.join(__dirname, 'snippets.json');
-// load snippets (safe fallback to empty array)
+
 let SNIPPETS = [];
 try {
   SNIPPETS = JSON.parse(fs.readFileSync(SNIPPET_FILE, 'utf8'));
 } catch (e) {
-  console.warn('Could not load snippets.json', e.message || e);
+  console.warn('⚠️ Could not load snippets.json:', e.message || e);
   SNIPPETS = [];
 }
 
-// simple snippet matcher (keyword count)
+// Snippet scoring logic
 function matchSnippets(text) {
   if (!text) return [];
   const t = text.toLowerCase();
-  const scored = SNIPPETS.map(s => {
-    const score = s.keywords.reduce((acc, k) => acc + (t.includes(k.toLowerCase()) ? 1 : 0), 0);
+
+  const ranked = SNIPPETS.map((s) => {
+    const score = s.keywords.reduce(
+      (acc, keyword) => acc + (t.includes(keyword.toLowerCase()) ? 1 : 0),
+      0
+    );
     return { ...s, score };
-  }).filter(s => s.score > 0)
-    .sort((a,b)=> b.score - a.score);
-  return scored.slice(0,3).map(({id,title,snippet,description}) => ({id,title,snippet,description}));
+  })
+    .filter((s) => s.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  return ranked.slice(0, 3).map(({ id, title, snippet, description }) => ({
+    id,
+    title,
+    snippet,
+    description,
+  }));
 }
 
-// In-memory mock storage for created issues (for dev/demo only)
+// ===== TEMP MEMORY FOR DEV =====
 const CREATED_ISSUES = [];
 
-// Real GitHub create-issue endpoint
+// ===== CREATE ISSUE ON GITHUB =====
 app.post('/create-issue', async (req, res) => {
   try {
     const { title, body, labels } = req.body || {};
-    if (!title || title.trim().length === 0) {
-      return res.status(400).json({ error: 'Missing title' });
+    if (!title || !title.trim()) {
+      return res.status(400).json({ error: 'Missing issue title' });
     }
 
-    // Build GitHub payload
-    const ghPayload = {
+    if (!process.env.REPO_OWNER || !process.env.REPO_NAME || !process.env.GITHUB_TOKEN) {
+      return res.status(500).json({ 
+        error: 'GitHub environment variables are missing (REPO_OWNER, REPO_NAME, GITHUB_TOKEN)' 
+      });
+    }
+
+    const payload = {
       title,
-      body: `${body || ''}\n\nReported via: BugSync+`,
-      labels: labels || ['from-cliq']
+      body: `${body || ''}\n\nReported via BugSync+`,
+      labels: labels || ['from-cliq'],
     };
 
-    // Call GitHub Issues API
-    const ghResp = await fetch(`https://api.github.com/repos/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/issues`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `token ${process.env.GITHUB_TOKEN}`,
-        'Accept': 'application/vnd.github+json',
-        'User-Agent': 'bugsync-plus'
-      },
-      body: JSON.stringify(ghPayload)
-    });
+    const response = await fetch(
+      `https://api.github.com/repos/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/issues`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          'User-Agent': 'bugsync-plus',
+          Accept: 'application/vnd.github+json',
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
-    const ghData = await ghResp.json();
+    const data = await response.json();
 
-    // If GitHub returned an error, pass it through
-    if (!ghResp.ok) {
-      console.error('GitHub API error', ghData);
-      return res.status(ghResp.status).json({ error: ghData });
+    if (!response.ok) {
+      console.error('❌ GitHub Issue Error:', data);
+      return res.status(response.status).json({ error: data });
     }
 
-    // Save a local reference (optional)
-    const issue = {
-      number: ghData.number,
-      title: ghData.title,
-      body: ghData.body,
-      url: ghData.html_url,
-      state: ghData.state,
-      labels: ghData.labels,
-      created_at: ghData.created_at
-    };
-    CREATED_ISSUES.unshift(issue);
+    // Store locally for debug
+    CREATED_ISSUES.unshift(data);
 
-    // Run snippet matching on title+body
-    const matched = matchSnippets(`${title} ${body || ''}`);
+    const matchedSnippets = matchSnippets(`${title} ${body || ''}`);
 
-    // Return success payload
-    return res.json({
-      issueUrl: ghData.html_url,
-      issueNumber: ghData.number,
-      title: ghData.title,
-      matchedSnippets: matched
+    res.json({
+      issueNumber: data.number,
+      issueUrl: data.html_url,
+      title: data.title,
+      matchedSnippets,
     });
 
   } catch (err) {
-    console.error('create-issue error', err);
-    return res.status(500).json({ error: 'server error' });
+    console.error('🔥 Issue creation error:', err);
+    res.status(500).json({ error: 'Server error while creating issue' });
   }
 });
 
-// Real issue status from GitHub
+// ===== GET ISSUE STATUS =====
 app.get('/issue-status/:number', async (req, res) => {
   try {
-    const num = Number(req.params.number);
-    if (!num || num <= 0) return res.status(400).json({ error: 'Invalid issue number' });
+    const number = Number(req.params.number);
+    if (!number || number <= 0) {
+      return res.status(400).json({ error: 'Invalid issue number' });
+    }
 
-    // Query GitHub
-    const ghResp = await fetch(`https://api.github.com/repos/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/issues/${num}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `token ${process.env.GITHUB_TOKEN}`,
-        'Accept': 'application/vnd.github+json',
-        'User-Agent': 'bugsync-plus'
+    const response = await fetch(
+      `https://api.github.com/repos/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/issues/${number}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          'User-Agent': 'bugsync-plus',
+          Accept: 'application/vnd.github+json',
+        },
       }
-    });
-    const ghData = await ghResp.json();
-    if (!ghResp.ok) return res.status(ghResp.status).json({ error: ghData });
+    );
 
-    return res.json({
-      number: ghData.number,
-      title: ghData.title,
-      state: ghData.state,
-      assignee: ghData.assignee,
-      labels: ghData.labels,
-      url: ghData.html_url
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('❌ GitHub Issue Status Error:', data);
+      return res.status(response.status).json({ error: data });
+    }
+
+    res.json({
+      number: data.number,
+      title: data.title,
+      state: data.state,
+      labels: data.labels,
+      assignee: data.assignee,
+      url: data.html_url,
     });
 
   } catch (err) {
-    console.error('issue-status error', err);
-    return res.status(500).json({ error: 'server error' });
+    console.error('🔥 Issue status error:', err);
+    res.status(500).json({ error: 'Server error retrieving issue status' });
   }
 });
 
-
+// ===== START SERVER =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`BugSync+ server running at http://localhost:${PORT}`);
+  console.log(`🚀 BugSync+ server running on port ${PORT}`);
 });
