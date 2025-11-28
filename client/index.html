@@ -1,45 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>BugSync+</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="app">
+    
+    <header class="header">
+      <h1>🐞 BugSync+</h1>
+      <p class="sub">Effortlessly report and track GitHub issues.</p>
+      <div id="authStatus" class="status-pill">Not Connected</div>
+    </header>
 
-  <h1>🐞 BugSync+</h1>
+    <main class="grid">
+      
+      <!-- Left column -->
+      <div class="col">
+        <div class="card glass">
+          <h2>1. Authenticate</h2>
+          <p>Connect your GitHub to begin.</p>
+          <button id="authBtn" class="primary">🔐 Connect GitHub</button>
+        </div>
 
-  <section>
-    <button id="authBtn">🔐 Connect GitHub</button>
-  </section>
+        <div class="card glass">
+          <h2>2. Select Repository</h2>
+          <select id="repoSelect"></select>
+          <button id="saveRepoBtn" class="secondary">💾 Save Repo</button>
+        </div>
+      </div>
 
-  <section>
-    <h3>📁 Select Repository</h3>
-    <select id="repoSelect"></select>
-    <button id="saveRepoBtn">Save Repo</button>
-  </section>
+      <!-- Right column -->
+      <div class="col">
+        <div class="card glass">
+          <h2>3. Create Issue</h2>
 
-  <section>
-    <h3>📝 Create Issue</h3>
-    <input id="issueTitle" placeholder="Issue Title">
-    <textarea id="issueBody" placeholder="Description"></textarea>
-    <button id="createIssueBtn">Create Issue</button>
-  </section>
+          <label>Title</label>
+          <input id="issueTitle" placeholder="Example: Login button not working" />
 
-  <section>
-    <h3>📌 Check Issue Status</h3>
-    <input id="issueNumber" placeholder="Issue Number">
-    <button id="statusBtn">Check</button>
-  </section>
+          <label>Description</label>
+          <textarea id="issueBody" placeholder="Steps to reproduce..."></textarea>
 
-  <section>
-    <h3>📤 Output</h3>
-    <pre id="output"></pre>
-  </section>
+          <button id="createIssueBtn" class="primary">🚀 Create Issue</button>
+        </div>
 
-<script src="script.js"></script>
+        <div class="card glass">
+          <h2>4. Check Issue Status</h2>
+
+          <label>Issue Number</label>
+          <input id="issueNumber" placeholder="Example: 42" />
+
+          <button id="statusBtn" class="secondary">🔍 Check</button>
+        </div>
+      </div>
+    </main>
+
+    <section class="output glass">
+      <div class="output-header">
+        <h2>Activity Output</h2>
+        <button id="clearOutputBtn" class="ghost">Clear</button>
+      </div>
+      <pre id="output"></pre>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
