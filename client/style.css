@@ -1,0 +1,102 @@
+/* ===== Global Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: #0f1117;
+  color: #e6e9ef;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* ===== Container ===== */
+body > * {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ===== Headings ===== */
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+h3 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  color: #bfc7d5;
+}
+
+/* ===== Buttons ===== */
+button {
+  padding: 10px 14px;
+  background: #2b2f3a;
+  color: #e6e9ef;
+  border: 1px solid #3a3f4b;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-size: 14px;
+}
+
+button:hover {
+  background: #3e4451;
+  border-color: #505766;
+}
+
+/* ===== Inputs & Selects ===== */
+input, textarea, select {
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #1b1e26;
+  border: 1px solid #323843;
+  border-radius: 6px;
+  color: #e6e9ef;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+/* ===== Output Box ===== */
+#output {
+  background: #151820;
+  border: 1px solid #28303d;
+  padding: 12px;
+  border-radius: 8px;
+  color: #b0b9c8;
+  min-height: 120px;
+  margin-top: 10px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+/* ===== Sections ===== */
+section {
+  padding: 15px;
+  background: #13161d;
+  border: 1px solid #222833;
+  border-radius: 8px;
+  margin-bottom: 18px;
+}
+
+/* ===== Fade Animation ===== */
+section, button, input, textarea, select {
+  transition: background 0.2s, border 0.2s, transform 0.15s;
+}
+
+button:active {
+  transform: scale(0.97);
+}
