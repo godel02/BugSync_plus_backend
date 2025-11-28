@@ -1,102 +1,139 @@
-/* ===== Global Reset ===== */
+/* Global reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
 }
-
 body {
-  background: #0f1117;
-  color: #e6e9ef;
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(135deg, #090c14, #151a23);
+  color: #e9ecf3;
   display: flex;
   justify-content: center;
-  padding: 40px;
+  padding: 30px;
 }
 
-/* ===== Container ===== */
-body > * {
+/* Container */
+.app {
   width: 100%;
-  max-width: 600px;
+  max-width: 1100px;
 }
 
-/* ===== Headings ===== */
-h1 {
+/* Header */
+.header {
   text-align: center;
-  margin-bottom: 25px;
-  font-size: 1.9rem;
+  margin-bottom: 30px;
+}
+.header h1 {
+  font-size: 2rem;
   font-weight: 600;
-  color: #ffffff;
+}
+.sub {
+  color: #9ba5b7;
+  margin: 5px 0 15px;
+}
+.status-pill {
+  background: rgba(255,255,255,0.05);
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: .85rem;
+}
+.status-pill.connected {
+  border-color: #3bbf6c;
+  color: #c8fcdc;
+  background: rgba(18, 94, 43, 0.3);
 }
 
-h3 {
-  margin-top: 20px;
-  margin-bottom: 8px;
-  color: #bfc7d5;
+/* Layout Grid */
+.grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.col {
+  flex: 1 1 450px;
 }
 
-/* ===== Buttons ===== */
-button {
-  padding: 10px 14px;
-  background: #2b2f3a;
-  color: #e6e9ef;
-  border: 1px solid #3a3f4b;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s ease;
-  font-size: 14px;
-}
-
-button:hover {
-  background: #3e4451;
-  border-color: #505766;
-}
-
-/* ===== Inputs & Selects ===== */
-input, textarea, select {
-  width: 100%;
-  margin-top: 6px;
-  margin-bottom: 10px;
-  padding: 10px;
-  background: #1b1e26;
-  border: 1px solid #323843;
-  border-radius: 6px;
-  color: #e6e9ef;
-  font-size: 14px;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 70px;
-}
-
-/* ===== Output Box ===== */
-#output {
-  background: #151820;
-  border: 1px solid #28303d;
-  padding: 12px;
-  border-radius: 8px;
-  color: #b0b9c8;
-  min-height: 120px;
-  margin-top: 10px;
-  overflow-y: auto;
-  white-space: pre-wrap;
-}
-
-/* ===== Sections ===== */
-section {
-  padding: 15px;
-  background: #13161d;
-  border: 1px solid #222833;
-  border-radius: 8px;
+/* Cards */
+.card {
+  padding: 18px;
+  border-radius: 14px;
   margin-bottom: 18px;
 }
-
-/* ===== Fade Animation ===== */
-section, button, input, textarea, select {
-  transition: background 0.2s, border 0.2s, transform 0.15s;
+.glass {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+.card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
 }
 
-button:active {
-  transform: scale(0.97);
+/* Inputs */
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.25);
+  color: #eef1f6;
+  outline: none;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: #4f8cff;
+  box-shadow: 0 0 6px rgba(79,140,255,0.5);
+}
+
+/* Buttons */
+button {
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: 0.15s;
+  font-size: .9rem;
+}
+.primary {
+  background: #4f8cff;
+  color: #fff;
+}
+.primary:hover {
+  background: #2c6dea;
+}
+.secondary {
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.secondary:hover {
+  background: rgba(255,255,255,0.17);
+}
+.ghost {
+  background: transparent;
+  color: #9ba5b7;
+}
+.ghost:hover {
+  color: #fff;
+}
+
+/* Output */
+.output {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 14px;
+}
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+#output {
+  background: rgba(0,0,0,0.25);
+  padding: 12px;
+  border-radius: 8px;
+  min-height: 120px;
+  white-space: pre-wrap;
 }
