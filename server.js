@@ -5,12 +5,23 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 
-// node-fetch (ESM import in CommonJS)
+// node-fetch helper for ESM import in CommonJS
 const fetch = (...args) =>
   import('node-fetch').then(({ default: f }) => f(...args));
 
+const sqlite3 = require('sqlite3').verbose();
+
+// ===== DATABASE =====
+const DB_PATH = path.join(__dirname, 'bugsync.sqlite');
+const db = new sqlite3.Database(DB_PATH);
+
+// ===== IMPORT USER SETTINGS MANAGER =====
+const { getRepo } = require('./auth/userSettings');
+
 const app = express();
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, "client")));
 
 // ===== ROUTERS =====
 const cliBugRouter = require('./cli-extension/bugCommand');
@@ -43,7 +54,7 @@ try {
   SNIPPETS = [];
 }
 
-// Snippet scoring logic
+// Snippet Matching Logic
 function matchSnippets(text) {
   if (!text) return [];
   const t = text.toLowerCase();
@@ -66,35 +77,49 @@ function matchSnippets(text) {
   }));
 }
 
-// ===== TEMP MEMORY FOR DEV =====
-const CREATED_ISSUES = [];
-
-// ===== CREATE ISSUE ON GITHUB =====
+// ===== CREATE ISSUE USING USER TOKEN + SELECTED REPO =====
 app.post('/create-issue', async (req, res) => {
   try {
-    const { title, body, labels } = req.body || {};
-    if (!title || !title.trim()) {
-      return res.status(400).json({ error: 'Missing issue title' });
-    }
+    const { userId, title, body, labels } = req.body || {};
 
-    if (!process.env.REPO_OWNER || !process.env.REPO_NAME || !process.env.GITHUB_TOKEN) {
-      return res.status(500).json({ 
-        error: 'GitHub environment variables are missing (REPO_OWNER, REPO_NAME, GITHUB_TOKEN)' 
+    if (!userId) return res.status(400).json({ error: "Missing userId" });
+    if (!title || !title.trim()) return res.status(400).json({ error: 'Missing title' });
+
+    // get selected repo for user
+    const userRepo = await getRepo(userId);
+    if (!userRepo)
+      return res.status(400).json({ error: "User has not selected a repository yet." });
+
+    const { repo_owner, repo_name } = userRepo;
+
+    // Get OAuth token stored from /connect/github flow
+    const tokenRow = await new Promise((resolve, reject) => {
+      db.get(
+        `SELECT access_token FROM user_tokens WHERE user_id=?`,
+        [userId],
+        (err, row) => (err ? reject(err) : resolve(row))
+      );
+    });
+
+    if (!tokenRow?.access_token)
+      return res.status(401).json({
+        error: "User must authenticate GitHub first."
       });
-    }
+
+    const accessToken = tokenRow.access_token;
 
     const payload = {
       title,
       body: `${body || ''}\n\nReported via BugSync+`,
-      labels: labels || ['from-cliq'],
+      labels: labels || ['bugsync'],
     };
 
     const response = await fetch(
-      `https://api.github.com/repos/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/issues`,
+      `https://api.github.com/repos/${repo_owner}/${repo_name}/issues`,
       {
         method: 'POST',
         headers: {
-          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          Authorization: `token ${accessToken}`,
           'User-Agent': 'bugsync-plus',
           Accept: 'application/vnd.github+json',
         },
@@ -105,25 +130,22 @@ app.post('/create-issue', async (req, res) => {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('❌ GitHub Issue Error:', data);
+      console.error("❌ GitHub Error:", data);
       return res.status(response.status).json({ error: data });
     }
 
-    // Store locally for debug
-    CREATED_ISSUES.unshift(data);
-
     const matchedSnippets = matchSnippets(`${title} ${body || ''}`);
 
-    res.json({
+    return res.json({
+      success: true,
       issueNumber: data.number,
       issueUrl: data.html_url,
-      title: data.title,
       matchedSnippets,
     });
 
   } catch (err) {
-    console.error('🔥 Issue creation error:', err);
-    res.status(500).json({ error: 'Server error while creating issue' });
+    console.error("🔥 Issue Creation Error:", err);
+    return res.status(500).json({ error: 'Server error while creating issue' });
   }
 });
 
@@ -135,33 +157,7 @@ app.get('/issue-status/:number', async (req, res) => {
       return res.status(400).json({ error: 'Invalid issue number' });
     }
 
-    const response = await fetch(
-      `https://api.github.com/repos/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/issues/${number}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `token ${process.env.GITHUB_TOKEN}`,
-          'User-Agent': 'bugsync-plus',
-          Accept: 'application/vnd.github+json',
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error('❌ GitHub Issue Status Error:', data);
-      return res.status(response.status).json({ error: data });
-    }
-
-    res.json({
-      number: data.number,
-      title: data.title,
-      state: data.state,
-      labels: data.labels,
-      assignee: data.assignee,
-      url: data.html_url,
-    });
+    return res.json({ error: "This endpoint will also be updated to use user repo + token soon." });
 
   } catch (err) {
     console.error('🔥 Issue status error:', err);
