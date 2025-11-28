@@ -137,3 +137,46 @@ button {
   min-height: 120px;
   white-space: pre-wrap;
 }
+
+/* --- Toast Notifications --- */
+.toast-container {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+}
+
+.toast {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: white;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: opacity .3s;
+}
+
+.toast.success { border-color: #3ecc78; color: #afffd0; }
+.toast.error { border-color: #e25555; color: #ffb1b1; }
+.toast.info { border-color: #4f8cff; color: #cfe1ff; }
+
+/* Smooth hover animations */
+button, input, textarea, select {
+  transition: 0.2s ease;
+}
+
+/* Card hover glow */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+}
+
+/* Input glow on focus */
+input:focus, textarea:focus {
+  background: rgba(255,255,255,0.07);
+  transform: scale(1.01);
+}
