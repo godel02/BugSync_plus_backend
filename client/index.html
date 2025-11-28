@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BugSync+</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>🐞 BugSync+</h1>
+
+  <section>
+    <button id="authBtn">🔐 Connect GitHub</button>
+  </section>
+
+  <section>
+    <h3>📁 Select Repository</h3>
+    <select id="repoSelect"></select>
+    <button id="saveRepoBtn">Save Repo</button>
+  </section>
+
+  <section>
+    <h3>📝 Create Issue</h3>
+    <input id="issueTitle" placeholder="Issue Title">
+    <textarea id="issueBody" placeholder="Description"></textarea>
+    <button id="createIssueBtn">Create Issue</button>
+  </section>
+
+  <section>
+    <h3>📌 Check Issue Status</h3>
+    <input id="issueNumber" placeholder="Issue Number">
+    <button id="statusBtn">Check</button>
+  </section>
+
+  <section>
+    <h3>📤 Output</h3>
+    <pre id="output"></pre>
+  </section>
+
+<script src="script.js"></script>
+</body>
+</html>
